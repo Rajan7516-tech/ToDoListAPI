@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoListAPI.Infra.Commands;
 using ToDoListAPI.Infra.Queries;
@@ -27,11 +28,17 @@ namespace ToDoListAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTasks([FromQuery] int userId, [FromQuery] string status)
+        public async Task<IActionResult> GetTasks([FromQuery][Optional] int userId, [FromQuery] string status)
         {
             var query = new GetTasksQuery { UserId = userId, Status = status };
             var tasks = await _queryHandler.Handle(query);
             return Ok(tasks);
         }
+        //public async Task<IActionResult> DeleteTask(DeleteTaskCommand command)
+        //{
+        //    var taskId = await _deleteHandler.Handle(command);
+
+        //    return Ok(GetTasks);
+        //}
     }
 }

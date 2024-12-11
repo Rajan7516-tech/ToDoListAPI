@@ -22,13 +22,17 @@ namespace ToDoListAPI.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register(User user)
+        public IActionResult Register(string username, string password)
         {
-            if (_context.Users.Any(u => u.Username == user.Username))
+            var user = new User();
+            user.Username = username;
+            user.Password = password;
+            if (_context.Users.Any(u => u.Username == username))
                 return BadRequest("Username already exists.");
 
             // Hash the password
             user.Password = _passwordHasher.HashPassword(user, user.Password);
+            //user.Password = password;
             _context.Users.Add(user);
             _context.SaveChanges();
 
@@ -36,14 +40,15 @@ namespace ToDoListAPI.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(User user)
+        public IActionResult Login(string Username, string Password)
         {
-            var dbUser = _context.Users.FirstOrDefault(u => u.Username == user.Username);
+            //var user = new User();
+            var dbUser = _context.Users.FirstOrDefault(u => u.Username == Username);
             if (dbUser == null)
                 return Unauthorized("Invalid credentials.");
 
             // Verify the hashed password
-            var result = _passwordHasher.VerifyHashedPassword(dbUser, dbUser.Password, user.Password);
+            var result = _passwordHasher.VerifyHashedPassword(dbUser, dbUser.Password, Password);
             if (result != PasswordVerificationResult.Success)
                 return Unauthorized("Invalid credentials.");
 

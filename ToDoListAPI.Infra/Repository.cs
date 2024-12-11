@@ -24,7 +24,7 @@ namespace ToDoListAPI.Infra
 
         public async Task<IEnumerable<TEntity>> GetAllAsync() => await _dbSet.ToListAsync();
 
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate) => _dbSet.Where(predicate);
+        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate) => _dbSet.Where(predicate).AsNoTracking();
 
         public void Add(TEntity entity) => _dbSet.Add(entity);
 
